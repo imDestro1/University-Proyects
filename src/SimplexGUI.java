@@ -18,13 +18,13 @@ import java.text.DecimalFormat;
 public class SimplexGUI {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(SimplexGUI::createAndShowGUI);
+        SwingUtilities.invokeLater(SimplexGUI::createGUI);
     }
 
     /**
-     * Crea y muestra la interfaz
+     * Creacion de la interfaz
      */
-    private static void createAndShowGUI() {
+    private static void createGUI() {
         JFrame frame = new JFrame("Metodo Simplex");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 700);
@@ -39,7 +39,9 @@ public class SimplexGUI {
         JTextField varField = new JTextField(3); // vacio
         JLabel conLabel = new JLabel("Numero de restricciones:");
         JTextField conField = new JTextField(3); // vacio
-        JButton generateButton = new JButton("Generar campos");
+        JButton generateButton = new JButton("Crear");
+        generateButton.setBackground(Color.white);
+        topPanel.setBackground(Color.white);
 
         topPanel.add(varLabel);
         topPanel.add(varField);
@@ -48,7 +50,7 @@ public class SimplexGUI {
         topPanel.add(generateButton);
         frame.add(topPanel, BorderLayout.NORTH);
 
-        // ------------------ Panel central: campos de coeficientes ------------------
+        // ------------------ Panel central: campos para coeficientes ------------------
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(0, 1));
         JScrollPane scrollPane = new JScrollPane(centerPanel);
@@ -67,20 +69,22 @@ public class SimplexGUI {
         bottomPanel.add(resultScroll, BorderLayout.CENTER);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         bottomPanel.setBackground(Color.gray);
+        resultArea.setBackground(Color.lightGray);
+        solveButton.setBackground(Color.white);
         solveButton.setBounds(320,200, 100, 50);
-        // ------------------ Acción botón Generar Campos ------------------
+        // ------------------ Accion boton Generar Campos ------------------
         generateButton.addActionListener(e -> {
             centerPanel.removeAll(); // limpia panel de entradas anteriores
             try {
                 int numVar = Integer.parseInt(varField.getText());
                 int numCons = Integer.parseInt(conField.getText());
 
-                // ------------------ Función objetivo ------------------
+                // ------------------ Funcion objetivo ------------------
                 JPanel objPanel = new JPanel();
-                objPanel.add(new JLabel("Función objetivo coef x1:"));
+                objPanel.add(new JLabel("Función objetivo coef x1, x2, xn:"));
                 JTextField[] objFields = new JTextField[numVar];
                 for (int i = 0; i < numVar; i++) {
-                    objFields[i] = new JTextField(3); // vacío
+                    objFields[i] = new JTextField(3);
                     objPanel.add(objFields[i]);
                 }
                 centerPanel.add(objPanel);
@@ -89,7 +93,7 @@ public class SimplexGUI {
                 JTextField[][] conFields = new JTextField[numCons][numVar + 1]; // +1 para RHS
                 for (int i = 0; i < numCons; i++) {
                     JPanel p = new JPanel();
-                    p.add(new JLabel("Restricción " + (i + 1) + " coef x1:"));
+                    p.add(new JLabel("Restricción " + (i + 1) + " coef x1,x2,xn:"));
                     for (int j = 0; j < numVar + 1; j++) {
                         conFields[i][j] = new JTextField(3); // vacío
                         p.add(conFields[i][j]);
@@ -163,8 +167,8 @@ public class SimplexGUI {
         frame.setVisible(true);
     }
 
-    // ------------------ METODOS SIMPLEX ------------------
-
+    // ------------------ METODO SIMPLEX ------------------
+    //Construccion de la tabla con los valores
     static double[][] buildTableau(double[] obj, double[][] cons, double[] rhs) {
         int numVar = obj.length;
         int numCons = cons.length;
@@ -173,19 +177,19 @@ public class SimplexGUI {
         for (int i = 0; i < numCons; i++) {
             for (int j = 0; j < numVar; j++) tab[i][j] = cons[i][j];
             tab[i][numVar + i] = 1; // variable de holgura
-            tab[i][tab[0].length - 1] = rhs[i]; // RHS
+            tab[i][tab[0].length - 1] = rhs[i];
         }
 
         for (int j = 0; j < numVar; j++) tab[numCons][j] = -obj[j]; // función objetivo
         return tab;
     }
-
+    //metodo que determina si es optima la aplicacion del metodo
     static boolean isOptimal(double[][] tab) {
         for (int j = 0; j < tab[0].length - 1; j++)
             if (tab[tab.length - 1][j] < 0) return false;
         return true;
     }
-
+    //metodo para encontrar la columna Pivote
     static int findPivotColumn(double[][] tab) {
         int pivotCol = 0;
         double min = tab[tab.length - 1][0];
@@ -193,7 +197,7 @@ public class SimplexGUI {
             if (tab[tab.length - 1][j] < min) { min = tab[tab.length - 1][j]; pivotCol = j; }
         return pivotCol;
     }
-
+    //metodo para encontrar la fila Pivote
     static int findPivotRow(double[][] tab, int col) {
         int pivotRow = -1;
         double minRatio = Double.MAX_VALUE;
@@ -205,7 +209,7 @@ public class SimplexGUI {
         }
         return pivotRow;
     }
-
+    //Metodo para operar con el pivote cada operando
     static void pivotOperation(double[][] tab, int pivotRow, int pivotCol) {
         int rows = tab.length;
         int cols = tab[0].length;
@@ -220,7 +224,7 @@ public class SimplexGUI {
             }
         }
     }
-
+    //Mostrar tabla de resultados con iteraciones
     static void printTableau(double[][] tab, JTextArea area) {
         DecimalFormat df = new DecimalFormat("0.###");
         area.append("Tableau:\n");
