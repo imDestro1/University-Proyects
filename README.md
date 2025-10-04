@@ -1,0 +1,5 @@
+___________________________________________________________________________________________________
+English| Hi! All the content in this space is a small demonstration of several projects from my university.
+___________________________________________________________________________________________________
+Español| Hola! Todo el contenido que aparece en este espacio es una pequeña demostracion de algunos proyectos en los que trabajo en la universidad.
+___________________________________________________________________________________________________
