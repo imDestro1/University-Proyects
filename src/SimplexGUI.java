@@ -25,7 +25,7 @@ public class SimplexGUI {
      * Crea y muestra la interfaz
      */
     private static void createAndShowGUI() {
-        JFrame frame = new JFrame("Metodo Simplex Reducido con Iteraciones");
+        JFrame frame = new JFrame("Metodo Simplex");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 700);
         frame.setLayout(new BorderLayout());
@@ -56,8 +56,10 @@ public class SimplexGUI {
         centerPanel.setBackground(Color.gray);
 
         // ------------------ Panel inferior: boton resolver y resultados ------------------
-        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton solveButton = new JButton("Resolver");
+        bottomPanel.add(solveButton);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
         JTextArea resultArea = new JTextArea(15, 50);
         resultArea.setEditable(false);
         JScrollPane resultScroll = new JScrollPane(resultArea);
@@ -65,7 +67,7 @@ public class SimplexGUI {
         bottomPanel.add(resultScroll, BorderLayout.CENTER);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         bottomPanel.setBackground(Color.gray);
-
+        solveButton.setBounds(320,200, 100, 50);
         // ------------------ Acción botón Generar Campos ------------------
         generateButton.addActionListener(e -> {
             centerPanel.removeAll(); // limpia panel de entradas anteriores
@@ -75,7 +77,7 @@ public class SimplexGUI {
 
                 // ------------------ Función objetivo ------------------
                 JPanel objPanel = new JPanel();
-                objPanel.add(new JLabel("Función objetivo (coef x1 ... xn):"));
+                objPanel.add(new JLabel("Función objetivo coef x1:"));
                 JTextField[] objFields = new JTextField[numVar];
                 for (int i = 0; i < numVar; i++) {
                     objFields[i] = new JTextField(3); // vacío
@@ -87,7 +89,7 @@ public class SimplexGUI {
                 JTextField[][] conFields = new JTextField[numCons][numVar + 1]; // +1 para RHS
                 for (int i = 0; i < numCons; i++) {
                     JPanel p = new JPanel();
-                    p.add(new JLabel("Restricción " + (i + 1) + " (coef x1 ... xn y RHS):"));
+                    p.add(new JLabel("Restricción " + (i + 1) + " coef x1:"));
                     for (int j = 0; j < numVar + 1; j++) {
                         conFields[i][j] = new JTextField(3); // vacío
                         p.add(conFields[i][j]);
@@ -154,7 +156,7 @@ public class SimplexGUI {
                 });
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Ingrese valores válidos de número de variables y restricciones");
+                JOptionPane.showMessageDialog(frame, "Ingrese valores validos para las variables y restricciones");
             }
         });
 

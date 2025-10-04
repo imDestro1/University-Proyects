@@ -54,7 +54,7 @@ public class vrcMethod extends JFrame {
     private void verificar() {
         String texto = txtInput.getText().trim();
         if (texto.isEmpty()) {
-            txtOutput.setText("⚠ Ingrese algo.");
+            txtOutput.setText("⚠ Ingrese algo valido");
             return;
         }
 
